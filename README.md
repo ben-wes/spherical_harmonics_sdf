@@ -6,7 +6,7 @@ The shader code was customized quite a bit for this use case and became quite a 
 
 Tested on MacOS arm64 with Pd0.55-1 and plugdata nightly build 4f40edd68
 
-> [!WARNING]  
+> [!IMPORTANT]  
 > It's a known issue here that Pd will crash if you start the gemwin from the patch without previously opening a gemwin from another context (like a Gem example or gemwin help) - see https://github.com/umlaeute/Gem/issues/452
 
 ### Dependencies
