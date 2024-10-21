@@ -55,7 +55,7 @@ float get_spherical_harmonics(
         + f2n2 * .50 * sqrt(15./PI) * xy 
         + f2n1 * .50 * sqrt(15./PI) * yz 
         + f20  * .25 * sqrt( 5./PI) * (3.*z2-1.)
-        + f21  * .50 * sqrt(15./PI) * zx 
+        + f21  * .50 * sqrt(15./PI) * zx
         + f22  * .25 * sqrt(15./PI) * (x2-y2)  
 
         + f3n3 * .25 * sqrt( 35./(2.*PI)) * y*(3.*x2-y2)
@@ -70,7 +70,7 @@ float get_spherical_harmonics(
         + f4n3 * .75   * sqrt(35./(2.*PI)) * yz*(3.*x2-y2)
         + f4n2 * .75   * sqrt( 5./(   PI)) * xy*(7.*z2-1.)
         + f4n1 * .75   * sqrt( 5./(2.*PI)) * yz*(7.*z2-3.)
-        + f40  * .1875 * sqrt( 1./PI) * (35.*z2*z2-30.*z2+3.)
+        + f40  * .1875 * sqrt( 1./    PI)  * (35.*z2*z2-30.*z2+3.)
         + f41  * .75   * sqrt( 5./(2.*PI)) * zx*(7.*z2-3.)
         + f42  * .375  * sqrt( 5./(   PI)) * (x2-y2)*(7.*z2-1.)
         + f43  * .75   * sqrt(35./(2.*PI)) * zx*(x2-3.*y2)
@@ -385,7 +385,7 @@ void main()
     vec2 uv = gl_FragCoord.xy / resolution;
 
     if (mode == 0) { // sum mode
-        vec3 viewDir = rayDirection(48.0, resolution.xy, gl_FragCoord.xy);
+        vec3 viewDir = rayDirection(24.0, resolution.xy, gl_FragCoord.xy);
         vec3 eye = vec3(0.0, -24.0, 0.0) * rotateX(mouse_drag.y) * rotateZ(mouse_drag.x);
         
         mat4 viewToWorld = viewMatrix(eye, vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 1.0));
