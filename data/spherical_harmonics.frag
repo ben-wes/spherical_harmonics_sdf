@@ -70,7 +70,7 @@ float get_spherical_harmonics(
         + f4n3 * .75   * sqrt(35./(2.*PI)) * yz*(3.*x2-y2)
         + f4n2 * .75   * sqrt( 5./(   PI)) * xy*(7.*z2-1.)
         + f4n1 * .75   * sqrt( 5./(2.*PI)) * yz*(7.*z2-3.)
-        + f40  * .09375 * (35.*z2*z2-30.*z2+3.)
+        + f40  * .09375 * (35.*z2*z2-30.*z2+3.) // not sure about this one. scaled it to 1/2 since it looked off
         + f41  * .75   * sqrt( 5./(2.*PI)) * zx*(7.*z2-3.)
         + f42  * .375  * sqrt( 5./(   PI)) * (x2-y2)*(7.*z2-1.)
         + f43  * .75   * sqrt(35./(2.*PI)) * zx*(x2-3.*y2)
@@ -384,7 +384,7 @@ void main()
 {
     vec2 uv = gl_FragCoord.xy / resolution;
 
-    if (mode == 0) {
+    if (mode == 0) { // sum mode
         vec3 viewDir = rayDirection(48.0, resolution.xy, gl_FragCoord.xy);
         vec3 eye = vec3(0.0, -24.0, 0.0) * rotateX(mouse_drag.y) * rotateZ(mouse_drag.x);
         
@@ -407,7 +407,7 @@ void main()
             return;
         }
     }
-    else if (mode == 1) {
+    else if (mode == 1) { // pyramid mode
         vec3 lightDir = normalize(vec3(1.0 + sin(time * 0.5) * 0.8, 1.0, -1.0));
         mat3 rot = rotateY(mouse_drag.x) * rotateX(mouse_drag.y);
 
@@ -448,6 +448,6 @@ void main()
             }
         }
     }
-
+    // draw grid if we didn't hit anything
     gl_FragColor = vec4(drawGrid(uv), 1.0);
 }
