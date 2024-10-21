@@ -70,7 +70,7 @@ float get_spherical_harmonics(
         + f4n3 * .75   * sqrt(35./(2.*PI)) * yz*(3.*x2-y2)
         + f4n2 * .75   * sqrt( 5./(   PI)) * xy*(7.*z2-1.)
         + f4n1 * .75   * sqrt( 5./(2.*PI)) * yz*(7.*z2-3.)
-        + f40  * .09375 * (35.*z2*z2-30.*z2+3.) // not sure about this one. scaled it to 1/2 since it looked off
+        + f40  * .1875 * sqrt( 1./PI) * (35.*z2*z2-30.*z2+3.)
         + f41  * .75   * sqrt( 5./(2.*PI)) * zx*(7.*z2-3.)
         + f42  * .375  * sqrt( 5./(   PI)) * (x2-y2)*(7.*z2-1.)
         + f43  * .75   * sqrt(35./(2.*PI)) * zx*(x2-3.*y2)
