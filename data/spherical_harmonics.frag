@@ -6,10 +6,10 @@
 
 #define PI 3.1415926
 
-#define MAX_MARCHING_STEPS 200
+#define MAX_MARCHING_STEPS 400
 #define MIN_DIST  0.
 #define MAX_DIST 70.
-#define EPSILON 0.001
+#define EPSILON 0.0001
 
 // uniforms sent from Pd
 uniform vec2 resolution;
@@ -177,7 +177,7 @@ float shortestDistanceToSurface(vec3 eye, vec3 marchingDirection, float start, f
             return depth;
         }
         // Adaptive step size with dampening
-        float step = min(abs(dist) * 0.5, lastDist * 0.5);
+        float step = max(min(abs(dist) * 0.1, lastDist * 0.9), EPSILON * depth);
         depth += max(step, EPSILON * depth);
         
         // Early termination
@@ -206,7 +206,7 @@ vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
  * Using the gradient of the SDF, estimate the normal on the surface at point p.
  */
 vec3 estimateNormal(vec3 p) {
-    float h = 0.001;
+    float h = 0.02;
     vec2 k = vec2(1, -1);
     return normalize(
         k.xyy * sceneSDF(p + k.xyy * h) +
@@ -396,10 +396,10 @@ void main()
         
         if (dist < MAX_DIST - EPSILON) {
             vec3 p = eye + dist * worldDir;
-            vec3 K_a = vec3(0.4);
-            vec3 K_d = vec3(0.4);
-            vec3 K_s = vec3(0.04);
-            float shininess = 10.0;
+            vec3 K_a = vec3(0.1);
+            vec3 K_d = vec3(0.5);
+            vec3 K_s = vec3(0.14);
+            float shininess = 20.0;
             
             float radius = get_radius_of_blob_towards_point(p);
             vec3 color = phongIllumination(K_a, K_d, K_s, shininess, p, eye);
@@ -424,11 +424,12 @@ void main()
                     vec3 ro = vec3(localUV * 2.0, -3.0);
                     vec3 rd = normalize(vec3(0.0, 0.0, 1.0));
                     
-                    float t = 0.0;
-                    for(int i = 0; i < 32; i++) {
-                        vec3 p = ro + rd * t;
-                        float d = singleHarmonicShape(rot * p, l, m, amplitude).x;
-                        if(d < EPSILON) {
+                    float depth = 0.0;
+                    float lastDist = MAX_DIST;
+                    for (int i = 0; i < MAX_MARCHING_STEPS; i++) {
+                        vec3 p = ro + rd * depth;
+                        float dist = singleHarmonicShape(rot * p, l, m, amplitude).x;
+                        if (dist < EPSILON) {
                             vec3 normal = normalize(vec3(
                                 singleHarmonicShape(rot * (p + vec3(0.001, 0.0, 0.0)), l, m, amplitude).x - singleHarmonicShape(rot * (p - vec3(0.001, 0.0, 0.0)), l, m, amplitude).x,
                                 singleHarmonicShape(rot * (p + vec3(0.0, 0.001, 0.0)), l, m, amplitude).x - singleHarmonicShape(rot * (p - vec3(0.0, 0.001, 0.0)), l, m, amplitude).x,
@@ -441,8 +442,13 @@ void main()
                             gl_FragColor = vec4(mix(shapeColor * 0.3, shapeColor, diff), 1.0);
                             return;
                         }
-                        t += max(abs(d) * 0.5, 0.01);
-                        if(t > 5.0) break;
+                        // Adaptive step size with dampening
+                        float step = max(min(abs(dist) * 0.1, lastDist * 0.9), EPSILON * depth);
+                        depth += max(step, EPSILON * depth);
+                        
+                        // Early termination
+                        if (depth >= 5.0) break;
+                        lastDist = dist;
                     }
                 }
             }
