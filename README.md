@@ -14,3 +14,7 @@ Tested on MacOS arm64 with Pd0.55-1 and plugdata nightly build 4f40edd68
 * Gem (available on Deken)
 * vstplugin~ (available on Deken)
 * IEM MultiEncoder - see plugins at https://plugins.iem.at/
+
+![spherical_harmonics_sdf screenshot](spherical_harmonics_sdf.png)
+
+![spherical_harmonics_sdf in plugdata screenshot](spherical_harmonics_sdf_plugdata.png)
